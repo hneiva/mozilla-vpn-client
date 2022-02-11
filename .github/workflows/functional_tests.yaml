@@ -36,12 +36,17 @@ jobs:
           TEST_LIST: ${{ steps.testGen.outputs.tests }}
         run: |
           echo $TEST_LIST | jq
-  build_test_app:
-    name: Build Test Client
+
+  functionaltests:
+    name: Test ${{matrix.test.name}} on Qt-${{matrix.version }}
+    needs: 
+      - test_list
     runs-on: ubuntu-20.04
+    timeout-minutes: 45
     strategy:
-      fail-fast: false # Don't cancel other jobs
+      fail-fast: false # Don't cancel other jobs if a test fails
       matrix:
+        test: ${{ fromJson(needs.test_list.outputs.matrix) }}
         version: ["5.15.2","6.2.1"]
     steps:
       - name: Clone repository
@@ -53,23 +58,26 @@ jobs:
           auth_header="$(git config --local --get http.https://github.com/.extraheader)"
           git submodule sync --recursive
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-      - name: Cache build
+      - name: Cache build/
         id: cache-build
         uses: actions/cache@v2
         with:
-          path: build/
-          key: ${{ github.sha }}-${{matrix.version}}
+          path: ~/.ccache
+          key: ${{ runner.os }}-ccache-${{matrix.version}}-${{ github.ref_name }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-${{matrix.version}}-main
 
       - name: Install Linux packages
-        if: steps.cache-build.outputs.cache-hit != 'true'
         run: |
           sudo apt update
-          sudo apt install git libgl-dev libegl-dev libpolkit-gobject-1-dev clang-10 liboath-dev python3 -y
+          sudo apt install git libgl-dev libegl-dev libpolkit-gobject-1-dev clang-10 liboath-dev python3 ccache -y
           python3 -m pip install aqtinstall
           aqt install-qt --outputdir /opt linux desktop ${{matrix.version}} gcc_64 -m all
+          sudo apt install --no-upgrade firefox xvfb -y
+          npm install
+
       - name: Compile test client
         shell: bash
-        if: steps.cache-build.outputs.cache-hit != 'true'
         run: |
           export PATH=/opt/${{matrix.version}}/gcc_64/bin:$PATH
           pip3 install -r requirements.txt
@@ -82,42 +90,7 @@ jobs:
           make -j$(nproc)
           mkdir build/
           cp ./src/mozillavpn build/
-      - name: Check build
-        run: |
-          ls -ial build/
-  functionaltests:
-    name: Test ${{matrix.test.name}} on Qt-${{matrix.version }}
-    needs: 
-      - build_test_app
-      - test_list
-    runs-on: ubuntu-20.04
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false # Don't cancel other jobs if a test fails
-      matrix:
-        test: ${{ fromJson(needs.test_list.outputs.matrix) }}
-        version: ["5.15.2","6.2.1"]
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v2
-      
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
-        with:
-          path: build/
-          key: ${{ github.sha }}-${{matrix.version}}
 
-      - name: Install dependecies
-        run: |
-          sudo apt update
-          sudo apt install git libgl-dev libegl-dev libpolkit-gobject-1-dev clang-10 liboath-dev python3 -y
-          python3 -m pip install aqtinstall
-          aqt install-qt --outputdir /opt linux desktop ${{matrix.version}} gcc_64 -m all
-          sudo apt install --no-upgrade firefox xvfb -y
-          pip3 install -r requirements.txt
-          npm install
-      
       - name: Check build
         shell: bash
         run: ./build/mozillavpn -v
@@ -151,3 +124,7 @@ jobs:
         with:
           name: ${{matrix.test.name}} Logs
           path: ${{ runner.temp }}/artifacts
+
+      - name: Show Cache Stats
+        if: ${{ always() }}
+        run: ccache -s
