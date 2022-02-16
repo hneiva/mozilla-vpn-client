@@ -39,16 +39,9 @@ exports.mochaHooks = {
   },
   async beforeEach() {
     // Start VPN app
-    vpnProcess = spawn(app, ['ui', '--testing'],{
-      env: {...process.env, LD_DEBUG: 'all'}
-    });
+    vpnProcess = spawn(app, ['ui', '--testing']);
     stdErr += 'VPN Process ID: ' + vpnProcess.pid;
     vpnProcess.stderr.on('data', (data) => {
-      console.log(data.toString('utf8'));
-      stdErr += data;
-    });
-    vpnProcess.stdout.on('data', (data) => {
-      console.log(data.toString('utf8'));
       stdErr += data;
     });
     // Connect to VPN
