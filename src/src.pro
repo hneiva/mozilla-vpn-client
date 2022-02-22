@@ -23,7 +23,7 @@ QT += widgets
 QT += charts
 QT += websockets
 QT += sql
-
+QT += core5compat
 # For the inspector
 QT+= testlib
 QT.testlib.CONFIG -= console
@@ -848,7 +848,7 @@ else:win* {
 
     QT += networkauth
     QT += svg
-    QT += winextras
+
 
     CONFIG += embed_manifest_exe
     DEFINES += MVPN_WINDOWS

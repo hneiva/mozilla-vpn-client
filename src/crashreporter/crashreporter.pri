@@ -41,9 +41,9 @@ HEADERS += \
     $$PWD/platforms/windows/windowscrashclient.h
 
 QMAKE_CXXFLAGS += -Zc:preprocessor
-QT += networkauth
+#QT += networkauth
 QT += svg
-QT += winextras
+#QT += winextras
 }
 
 RESOURCES += \
