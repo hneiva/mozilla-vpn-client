@@ -105,5 +105,6 @@
         <file>components/VPNWasmMenu.qml</file>
         <file>components/inAppAuth/qmldir</file>
         <file>components/inAppAuth/VPNInAppAuthenticationBase.qml</file>
+        <file>components/inAppAuth/VPNInAppAuthenticationInputs.qml</file>
     </qresource>
 </RCC>
