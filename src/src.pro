@@ -676,11 +676,11 @@ else:macos {
     DEFINES += MVPN_MACOS
 
     SOURCES += \
+            platforms/macos/macosauthenticationlistener.cpp \
             platforms/macos/macosmenubar.cpp \
             platforms/macos/macospingsender.cpp \
             platforms/macos/macosstartatbootwatcher.cpp \
-            systemtraynotificationhandler.cpp \
-            tasks/authenticate/desktopauthenticationlistener.cpp
+            systemtraynotificationhandler.cpp
 
     OBJECTIVE_SOURCES += \
             platforms/macos/macoscryptosettings.mm \
@@ -688,11 +688,11 @@ else:macos {
             platforms/macos/macosutils.mm
 
     HEADERS += \
+            platforms/macos/macosauthenticationlistener.h \
             platforms/macos/macosmenubar.h \
             platforms/macos/macospingsender.h \
             platforms/macos/macosstartatbootwatcher.h \
-            systemtraynotificationhandler.h \
-            tasks/authenticate/desktopauthenticationlistener.h
+            systemtraynotificationhandler.h
 
     OBJECTIVE_HEADERS += \
             platforms/macos/macosnetworkwatcher.h \
