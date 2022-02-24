@@ -42,45 +42,15 @@ VPNInAppAuthenticationBase {
     _subtitleText: "Open your email and enter the verification code it that was sent."
     _imgSource: "qrc:/nebula/resources/verification-code.svg"
 
-    _inputs: ColumnLayout {
-        spacing: VPNTheme.theme.vSpacingSmall
 
-        VPNBoldLabel {
-            id: codeLabel
-            text: "Verification code"
-        }
-
-        VPNTextField {
-            id: codeInput
-            hasError: false
-            _placeholderText: "Enter 6-digit code"
-            Layout.fillWidth: true
-        }
-
-        VPNContextualAlerts {
-            id: passwordInputCreateWarnings
-            Layout.fillWidth: true
-
-            messages: [
-                {
-                    type: "error",
-                    message: "Invalid code entry",
-                    visible: !createAccountButton.enabled
-                }
-            ]
-        }
-
-        VPNButton {
-            id: createAccountButton
-            enabled: VPNAuthInApp.state === VPNAuthInApp.StateVerificationSessionByEmailNeeded && codeInput.text && codeInput.text.length === VPNAuthInApp.verificationCodeLength
-            loaderVisible: VPNAuthInApp.state === VPNAuthInApp.StateVerifyingSessionEmailCode
-            text: "Verify"
-            Layout.fillWidth: true
-
-            onClicked: {
-                if (enabled) {
-                    VPNAuthInApp.verifySessionEmailCode(codeInput.text);
-                }
+    _inputs: VPNInAppAuthenticationInputs {
+        _inputPlaceholderText: "Enter 6 digit code"
+        _inputErrorMessage: "Invalid code entry"
+        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateVerificationSessionByEmailNeeded && activeInput().text && activeInput().text.length === VPNAuthInApp.verificationCodeLength
+        _buttonText: "Verify"
+        _buttonOnClicked: (inputText) => {
+            if (enabled) {
+                VPNAuthInApp.verifySessionEmailCode(inputText);
             }
         }
     }

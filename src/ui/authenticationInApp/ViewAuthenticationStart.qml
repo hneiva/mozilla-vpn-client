@@ -31,21 +31,17 @@ VPNInAppAuthenticationBase {
     _imgSource: "qrc:/ui/resources/logo.svg"
     _inputLabel: "Email address"
 
-    _inputs: ColumnLayout {
-        spacing: VPNTheme.theme.vSpacing * 2
-        VPNTextField {
-            id: emailInput
-            hasError: !VPNAuthInApp.validateEmailAddress(emailInput.text)
-            _placeholderText: "Enter email"
-            Layout.fillWidth: true
-        }
-        VPNButton {
-            text: "Continue"
-            enabled: VPNAuthInApp.state === VPNAuthInApp.StateStart && emailInput.text.length !== 0 && !emailInput.hasError
-            loaderVisible: VPNAuthInApp.state === VPNAuthInApp.StateCheckingAccount
-            onClicked: VPNAuthInApp.checkAccount(emailInput.text);
-            Layout.fillWidth: true
-        }
+    _inputs: VPNInAppAuthenticationInputs {
+        id: inputsss
+        _inputPlaceholderText: "Enter email"
+        _inputErrorMessage: "Please enter a valid email"
+        _buttonText: "Continue"
+        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateStart && activeInput().text.length !== 0
+        _buttonOnClicked: (inputText) => {
+                              if (!VPNAuthInApp.validateEmailAddress(inputText))
+                                  return activeInput().hasError = true;
+                              VPNAuthInApp.checkAccount(inputText);
+                          }
     }
 
     _disclaimers: RowLayout {
