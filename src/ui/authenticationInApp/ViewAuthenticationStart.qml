@@ -32,16 +32,17 @@ VPNInAppAuthenticationBase {
     _inputLabel: "Email address"
 
     _inputs: VPNInAppAuthenticationInputs {
-        id: inputsss
-        _inputPlaceholderText: "Enter email"
-        _inputErrorMessage: "Please enter a valid email"
-        _buttonText: "Continue"
-        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateStart && activeInput().text.length !== 0
+        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateStart && activeInput().text.length !== 0 && !activeInput().hasError
         _buttonOnClicked: (inputText) => {
-                              if (!VPNAuthInApp.validateEmailAddress(inputText))
-                                  return activeInput().hasError = true;
+                              if (!VPNAuthInApp.validateEmailAddress(inputText)) {
+                                  activeInput().hasError = true;
+                                  _inputErrorMessage = "invalid email address, try again"
+                                  return activeInput().forceActiveFocus();
+                              }
                               VPNAuthInApp.checkAccount(inputText);
                           }
+        _buttonText: "Continue"
+        _inputPlaceholderText: "Enter email"
     }
 
     _disclaimers: RowLayout {

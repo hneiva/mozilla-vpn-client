@@ -22,6 +22,8 @@ ColumnLayout {
         return _isSignInView ? passwordInput : textInput
     }
 
+    Component.onCompleted:activeInput().forceActiveFocus();
+
     spacing: VPNTheme.theme.vSpacing - VPNTheme.theme.listSpacing
 
     ColumnLayout {
@@ -99,6 +101,24 @@ ColumnLayout {
     Connections {
         target: VPNAuthInApp
         function onErrorOccurred(e) {
+            switch(e) {
+            case 2:
+                base._inputErrorMessage =  VPNl18n.InAppAuthInvalidPasswordErrorMessage;
+                break;
+            case 4:
+                base._inputErrorMessage = "email type not supported";
+                break;
+            case 3:
+                base._inputErrorMessage = "invalid or expired verification code";
+                break;
+            case 8:
+                base._inputErrorMessage = "too many login attempts, try again in 15 minutes";
+                break;
+            case 10:
+                base._inputErrorMessage = "invalid 2fa unblock code";
+                break;
+            }
+
             activeInput().hasError = true;
             activeInput().forceActiveFocus();
         }

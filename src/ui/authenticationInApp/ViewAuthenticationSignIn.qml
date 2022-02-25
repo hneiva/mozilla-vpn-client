@@ -40,14 +40,13 @@ VPNInAppAuthenticationBase {
     _inputLabel: VPNl18n.InAppAuthPasswordInputLabel
 
     _inputs: VPNInAppAuthenticationInputs {
-        _inputPlaceholderText: VPNl18n.InAppAuthPasswordInputPlaceholder
-        _inputErrorMessage: VPNl18n.InAppAuthInvalidPasswordErrorMessage
-        _buttonText: VPNl18n.InAppAuthSignInButton
-        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateSignIn
+        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateSignIn && !activeInput().hasError
         _buttonOnClicked: (inputText) => {
              VPNAuthInApp.setPassword(inputText);
              VPNAuthInApp.signIn();
          }
+        _buttonText: VPNl18n.InAppAuthSignInButton
+        _inputPlaceholderText: VPNl18n.InAppAuthPasswordInputPlaceholder
     }
 
     _disclaimers: ColumnLayout {

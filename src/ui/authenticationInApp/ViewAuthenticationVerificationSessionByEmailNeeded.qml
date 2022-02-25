@@ -34,25 +34,17 @@ VPNInAppAuthenticationBase {
 
     _changeEmailLinkVisible: true
     _menuButtonImageSource: "qrc:/nebula/resources/back.svg"
-    _menuButtonOnClick: () => {
-        VPNAuthInApp.reset();
-    }
+    _menuButtonOnClick: () => { VPNAuthInApp.reset() }
     _menuButtonAccessibleName: "Back"
     _headlineText: "Enter verification code"
     _subtitleText: "Open your email and enter the verification code it that was sent."
     _imgSource: "qrc:/nebula/resources/verification-code.svg"
 
-
     _inputs: VPNInAppAuthenticationInputs {
-        _inputPlaceholderText: "Enter 6 digit code"
-        _inputErrorMessage: "Invalid code entry"
-        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateVerificationSessionByEmailNeeded && activeInput().text && activeInput().text.length === VPNAuthInApp.verificationCodeLength
+        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateVerificationSessionByEmailNeeded && activeInput().text && activeInput().text.length === VPNAuthInApp.verificationCodeLength && !activeInput().hasError
+        _buttonOnClicked: (inputText) => { VPNAuthInApp.verifySessionEmailCode(inputText) }
         _buttonText: "Verify"
-        _buttonOnClicked: (inputText) => {
-            if (enabled) {
-                VPNAuthInApp.verifySessionEmailCode(inputText);
-            }
-        }
+        _inputPlaceholderText: "Enter 6 digit code"
     }
 
     _footerContent: Column {
@@ -62,9 +54,7 @@ VPNInAppAuthenticationBase {
         VPNLinkButton {
             labelText: "Resend code"
             anchors.horizontalCenter: parent.horizontalCenter
-            onClicked: {
-                VPNAuthInApp.resendVerificationSessionCodeEmail();
-            }
+            onClicked: VPNAuthInApp.resendVerificationSessionCodeEmail();
         }
 
         VPNLinkButton {

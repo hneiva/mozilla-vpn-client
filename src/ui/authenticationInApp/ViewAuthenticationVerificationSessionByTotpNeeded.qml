@@ -36,11 +36,10 @@ VPNInAppAuthenticationBase {
     _inputLabel: "Enter code"
 
     _inputs: VPNInAppAuthenticationInputs {
-        _inputPlaceholderText: "Enter 2-factor auth code"
-        _inputErrorMessage: "Incorrect code"
-        _buttonText: "Continue"
-        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateVerificationSessionByTotpNeeded
+        _buttonEnabled: VPNAuthInApp.state === VPNAuthInApp.StateVerificationSessionByTotpNeeded && !activeInput().hasError
         _buttonOnClicked: (inputText) => { VPNAuthInApp.verifySessionTotpCode(inputText) }
+        _buttonText: "Continue"
+        _inputPlaceholderText: "Enter 2-factor auth code"
     }
 
     _footerContent: Column {
