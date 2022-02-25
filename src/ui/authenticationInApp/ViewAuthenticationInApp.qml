@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import QtQuick 2.5
+import QtQuick.Layouts 1.14
 
 import Mozilla.VPN 1.0
 import components 0.1
@@ -16,6 +17,62 @@ Item {
 
         asynchronous: true
         anchors.fill: parent
+    }
+
+    VPNPopup {
+        Component.onCompleted: open();
+        id: authError
+        anchors.centerIn: parent
+        focus: true
+        width: Math.min(parent.width * 0.83, VPNTheme.theme.maxHorizontalContentWidth)
+
+        ColumnLayout {
+            id: col
+            anchors.top: parent.top
+            anchors.topMargin:40
+            spacing: VPNTheme.theme.vSpacing
+            Rectangle {
+                id: warningIconWrapper
+                Layout.preferredHeight: VPNTheme.theme.rowHeight
+                Layout.preferredWidth: Layout.preferredHeight
+                Layout.alignment: Qt.AlignHCenter;
+                color: VPNTheme.theme.red
+                radius: height / 2
+
+                Image {
+                    source: "qrc:/ui/resources/warning-white.svg"
+                    antialiasing: true
+                    sourceSize.height: VPNTheme.theme.windowMargin
+                    sourceSize.width: sourceSize.height
+                    anchors.centerIn: parent
+                }
+            }
+
+            VPNTextBlock {
+                id: authErrorMessage
+                text: " "
+                horizontalAlignment: Text.AlignHCenter
+                Layout.preferredWidth: parent.width
+                width: undefined
+            }
+        }
+
+        Connections {
+            target: VPNAuthInApp
+            function onErrorOccurred(e) {
+                switch(e) {
+                case VPNAuthInApp.ErrorTooManyRequests:
+                    authErrorMessage.text = "Too many login attempts, hold off for 15 minutes"
+                    authError.open();
+                    break;
+
+                case VPNAuthInApp.ErrorEmailTypeNotSupported:
+                    authErrorMessage.text = "email type not supported";
+                    authError.open();
+                    break;
+                }
+            }
+        }
     }
 
     states: [

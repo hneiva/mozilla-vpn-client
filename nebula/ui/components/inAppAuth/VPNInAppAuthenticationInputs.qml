@@ -22,7 +22,7 @@ ColumnLayout {
         return _isSignInView ? passwordInput : textInput
     }
 
-    Component.onCompleted:activeInput().forceActiveFocus();
+    Component.onCompleted: if (!authError.visible) activeInput().forceActiveFocus();
 
     spacing: VPNTheme.theme.vSpacing - VPNTheme.theme.listSpacing
 
@@ -102,25 +102,22 @@ ColumnLayout {
         target: VPNAuthInApp
         function onErrorOccurred(e) {
             switch(e) {
-            case 2:
+            case VPNAuthInApp.ErrorIncorrectPassword:
                 base._inputErrorMessage =  VPNl18n.InAppAuthInvalidPasswordErrorMessage;
+                activeInput().forceActiveFocus();
                 break;
-            case 4:
-                base._inputErrorMessage = "email type not supported";
-                break;
-            case 3:
+            case VPNAuthInApp.ErrorInvalidEmailCode:
                 base._inputErrorMessage = "invalid or expired verification code";
+                activeInput().forceActiveFocus();
                 break;
-            case 8:
-                base._inputErrorMessage = "too many login attempts, try again in 15 minutes";
-                break;
-            case 10:
+            case VPNAuthInApp.ErrorInvalidTotpCode:
                 base._inputErrorMessage = "invalid 2fa unblock code";
+                activeInput().forceActiveFocus();
                 break;
             }
-
+            if (!authError.visible)
+                activeInput().forceActiveFocus();
             activeInput().hasError = true;
-            activeInput().forceActiveFocus();
         }
     }
 }

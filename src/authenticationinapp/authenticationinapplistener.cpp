@@ -547,6 +547,7 @@ void AuthenticationInAppListener::processErrorCode(int errorCode) {
       break;
 
     case 114:  // Client has sent too many requests
+      aip->requestState(AuthenticationInApp::StateStart, this);
       aip->requestErrorPropagation(AuthenticationInApp::ErrorTooManyRequests,
                                    this);
       break;
