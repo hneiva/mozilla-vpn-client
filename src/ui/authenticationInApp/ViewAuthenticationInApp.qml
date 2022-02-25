@@ -20,7 +20,6 @@ Item {
     }
 
     VPNPopup {
-        Component.onCompleted: open();
         id: authError
         anchors.centerIn: parent
         focus: true
@@ -28,9 +27,8 @@ Item {
 
         ColumnLayout {
             id: col
-            anchors.top: parent.top
-            anchors.topMargin:40
             spacing: VPNTheme.theme.vSpacing
+            anchors.fill: parent
             Rectangle {
                 id: warningIconWrapper
                 Layout.preferredHeight: VPNTheme.theme.rowHeight
@@ -50,7 +48,7 @@ Item {
 
             VPNTextBlock {
                 id: authErrorMessage
-                text: " "
+                text: ""
                 horizontalAlignment: Text.AlignHCenter
                 Layout.preferredWidth: parent.width
                 width: undefined
