@@ -95,7 +95,13 @@ ColumnLayout {
     VPNButton {
         id: btn
         Layout.fillWidth: true
+        loaderVisible:  VPNAuthInApp.state === VPNAuthInApp.StateCheckingAccount ||
+                        VPNAuthInApp.state === VPNAuthInApp.StateSigningIn ||
+                        VPNAuthInApp.state === VPNAuthInApp.StateSigningUp ||
+                        VPNAuthInApp.state === VPNAuthInApp.StateVerifyingSessionEmailCode ||
+                        VPNAuthInApp.state === VPNAuthInApp.StateVerifyingSessionTotpCode
         onClicked: _buttonOnClicked(activeInput().text)
+
     }
 
     Connections {
