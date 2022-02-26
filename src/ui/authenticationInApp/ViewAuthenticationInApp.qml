@@ -22,36 +22,39 @@ Item {
     VPNPopup {
         id: authError
         anchors.centerIn: parent
-        focus: true
-        width: Math.min(parent.width * 0.83, VPNTheme.theme.maxHorizontalContentWidth)
+        width: Math.min(parent.width * 0.73, VPNTheme.theme.maxHorizontalContentWidth)
+        maxWidth: Math.min(parent.width * 0.83, VPNTheme.theme.maxHorizontalContentWidth)
+        contentItem: FocusScope {
+            id: authErrorContent
+            focus: true
+            ColumnLayout {
+                id: col
+                spacing: VPNTheme.theme.vSpacing
+                anchors.fill: parent
+                Rectangle {
+                    id: warningIconWrapper
+                    Layout.preferredHeight: VPNTheme.theme.rowHeight
+                    Layout.preferredWidth: VPNTheme.theme.rowHeight
+                    Layout.alignment: Qt.AlignHCenter;
+                    color: VPNTheme.theme.red
+                    radius: height / 2
 
-        ColumnLayout {
-            id: col
-            spacing: VPNTheme.theme.vSpacing
-            anchors.fill: parent
-            Rectangle {
-                id: warningIconWrapper
-                Layout.preferredHeight: VPNTheme.theme.rowHeight
-                Layout.preferredWidth: Layout.preferredHeight
-                Layout.alignment: Qt.AlignHCenter;
-                color: VPNTheme.theme.red
-                radius: height / 2
-
-                Image {
-                    source: "qrc:/ui/resources/warning-white.svg"
-                    antialiasing: true
-                    sourceSize.height: VPNTheme.theme.windowMargin
-                    sourceSize.width: sourceSize.height
-                    anchors.centerIn: parent
+                    Image {
+                        source: "qrc:/ui/resources/warning-white.svg"
+                        antialiasing: true
+                        sourceSize.height: VPNTheme.theme.windowMargin
+                        sourceSize.width: VPNTheme.theme.windowMargin
+                        anchors.centerIn: parent
+                    }
                 }
-            }
 
-            VPNTextBlock {
-                id: authErrorMessage
-                text: ""
-                horizontalAlignment: Text.AlignHCenter
-                Layout.preferredWidth: parent.width
-                width: undefined
+                VPNTextBlock {
+                    id: authErrorMessage
+                    text: ""
+                    horizontalAlignment: Text.AlignHCenter
+                    Layout.preferredWidth: parent.width
+                    width: undefined
+                }
             }
         }
 
@@ -62,11 +65,13 @@ Item {
                 case VPNAuthInApp.ErrorTooManyRequests:
                     authErrorMessage.text = "Too many login attempts, hold off for 15 minutes"
                     authError.open();
+                    authErrorContent.forceActiveFocus()
                     break;
 
                 case VPNAuthInApp.ErrorEmailTypeNotSupported:
                     authErrorMessage.text = "email type not supported";
                     authError.open();
+                    authErrorContent.forceActiveFocus()
                     break;
                 }
             }

@@ -11,7 +11,7 @@ import components 0.1
 
 VPNButtonBase {
     id: iconButton
-    signal clicked()
+
     property bool skipEnsureVisible: false
     property var accessibleName
     property var buttonColorScheme: VPNTheme.theme.iconButtonLightBackground
