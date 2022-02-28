@@ -22,7 +22,8 @@ $env:PATH ="$QTPATH;$PYTHON_SCRIPTS;$env:PATH"
 $env:VCToolsRedistDir=(resolve-path "$FETCHES_PATH/VisualStudio/VC/Redist/MSVC/14.30.30704/").ToString()
 $env:BUILDDIR=resolve-path $FETCHES_PATH/QT_OUT
 
-python3 ./scripts/generate_glean.py
+python3 ./scripts/utils/generate_glean.py
+python3 ./scripts/utils/import_languages
 
 ./scripts/windows_compile.bat -w
 

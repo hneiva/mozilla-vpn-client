@@ -8,14 +8,13 @@ $RUST_VERSION = "1.59.0"
 
 $REPO_ROOT_PATH =resolve-path "$PSScriptRoot/../../../"
 $FETCHES_PATH =resolve-path "$REPO_ROOT_PATH/../../fetches"
-$RUST_DIR_NAME ="rust-$RUST_VERSION-x86_64-pc-windows-msvc"
 
-$RUST_BIN=resolve-path "$FETCHES_PATH/$RUST_DIR_NAME/rustc/bin"
-$CARGO_BIN=resolve-path "$FETCHES_PATH/$RUST_DIR_NAME/cargo/bin"
-$RUST_LIB =resolve-path "$FETCHES_PATH/$RUST_DIR_NAME/rustc/lib" 
+$env:CARGO_HOME="$FETCHES_PATH\cargo\"
 
-$env:PATH="$RUST_BIN;$CARGO_BIN;$env:PATH"
-$env:LD_LIBRARY_PATH="$RUST_LIB;$env:LD_LIBRARY_PATH"
+. "$FETCHES_PATH\rustup-init.exe" -y
+
+$env:Path="$env:Path;$env:CARGO_HOME/bin"
+
 
 Write-Output "Enabled Rust toolchain"
 rustc --version
